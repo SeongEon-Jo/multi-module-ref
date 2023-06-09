@@ -1,7 +1,3 @@
-dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-}
-
 bootJar {
 	enabled = true
 }
@@ -10,15 +6,33 @@ jar {
 	enabled = true
 }
 
-repositories {
-	mavenCentral()
-}
-
 sourceSets {
 	acceptanceTest {
 		compileClasspath += sourceSets.main.output + sourceSets.test.output
 		runtimeClasspath += sourceSets.main.output + sourceSets.test.output
 	}
+}
+
+configurations {
+	acceptanceTestImplementation.extendsFrom(implementation, testImplementation)
+	acceptanceTestRuntimeOnly.extendsFrom(runtimeOnly, testRuntimeOnly)
+	acceptanceTestImplementation.canBeResolved(true)
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+
+	// rest-assured
+	acceptanceTestImplementation 'io.rest-assured:rest-assured'
+
+	// cucumber
+	acceptanceTestImplementation 'io.cucumber:cucumber-java'
+	acceptanceTestImplementation 'io.cucumber:cucumber-spring'
+	acceptanceTestImplementation 'io.cucumber:cucumber-junit-platform-engine'
+}
+
+repositories {
+	mavenCentral()
 }
 
 task acceptanceTest(type: Test) {
