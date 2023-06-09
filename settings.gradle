@@ -1,0 +1,11 @@
+rootProject.name = 'multi-module'
+
+file('core').eachDir { dir ->
+    include dir.name
+    project(":${dir.name}").projectDir = dir
+}
+
+file('boot').eachDir { dir ->
+    include dir.name
+    project(":${dir.name}").projectDir = dir
+}
