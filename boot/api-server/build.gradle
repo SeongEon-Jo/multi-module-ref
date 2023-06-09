@@ -50,9 +50,9 @@ dependencies {
 	documentationImplementation 'org.springframework.restdocs:spring-restdocs-restassured'
 
 	// cucumber
-	acceptanceTestImplementation 'io.cucumber:cucumber-java'
-	acceptanceTestImplementation 'io.cucumber:cucumber-spring'
-	acceptanceTestImplementation 'io.cucumber:cucumber-junit-platform-engine'
+	acceptanceTestImplementation 'io.cucumber:cucumber-java:6.10.4'
+	acceptanceTestImplementation 'io.cucumber:cucumber-spring:6.10.4'
+	acceptanceTestImplementation 'io.cucumber:cucumber-junit-platform-engine:6.10.4'
 }
 
 task acceptanceTest(type: Test) {
