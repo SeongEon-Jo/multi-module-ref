@@ -1,3 +1,11 @@
+plugins {
+	id "org.asciidoctor.convert" version "1.5.10"
+}
+
+repositories {
+	mavenCentral()
+}
+
 bootJar {
 	enabled = true
 }
@@ -47,12 +55,24 @@ dependencies {
 	acceptanceTestImplementation 'io.cucumber:cucumber-junit-platform-engine'
 }
 
-repositories {
-	mavenCentral()
-}
-
 task acceptanceTest(type: Test) {
 	testClassesDirs = sourceSets.acceptanceTest.output.classesDirs
 	classpath = sourceSets.acceptanceTest.runtimeClasspath
 	useJUnitPlatform()
+}
+
+task documentationTest(type: Test) {
+	testClassesDirs = sourceSets.documentation.output.classesDirs
+	classpath = sourceSets.documentation.runtimeClasspath
+	useJUnitPlatform()
+}
+
+ext {
+	snippetsDir = file('build/generated-snippets')
+}
+
+asciidoctor {
+	inputs.dir snippetsDir
+	sourceDir 'src/documentation/adoc'
+	dependsOn documentationTest
 }
