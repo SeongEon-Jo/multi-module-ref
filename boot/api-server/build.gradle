@@ -19,11 +19,6 @@ sourceSets {
 		compileClasspath += sourceSets.main.output + sourceSets.test.output
 		runtimeClasspath += sourceSets.main.output + sourceSets.test.output
 	}
-
-	documentation {
-		compileClasspath += sourceSets.main.output + sourceSets.test.output
-		runtimeClasspath += sourceSets.main.output + sourceSets.test.output
-	}
 }
 
 configurations {
@@ -31,10 +26,6 @@ configurations {
 	acceptanceTestImplementation.extendsFrom(implementation, testImplementation)
 	acceptanceTestRuntimeOnly.extendsFrom(runtimeOnly, testRuntimeOnly)
 	acceptanceTestImplementation.canBeResolved(true)
-
-	// documentation
-	documentationImplementation.extendsFrom(implementation, testImplementation)
-	documentationRuntimeOnly.extendsFrom(runtimeOnly, testRuntimeOnly)
 }
 
 dependencies {
@@ -42,17 +33,22 @@ dependencies {
 
 	// rest-assured
 	acceptanceTestImplementation 'io.rest-assured:rest-assured'
-	documentationImplementation 'io.rest-assured:rest-assured:3.3.0'
-	documentationImplementation 'io.rest-assured:spring-mock-mvc:3.3.0'
+	testImplementation 'io.rest-assured:rest-assured:3.3.0'
+	testImplementation 'io.rest-assured:spring-mock-mvc:3.3.0'
 
 	// rest-docs
-	documentationImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
-	documentationImplementation 'org.springframework.restdocs:spring-restdocs-restassured'
+	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+	testImplementation 'org.springframework.restdocs:spring-restdocs-restassured'
 
 	// cucumber
-	acceptanceTestImplementation 'io.cucumber:cucumber-java:6.10.4'
-	acceptanceTestImplementation 'io.cucumber:cucumber-spring:6.10.4'
-	acceptanceTestImplementation 'io.cucumber:cucumber-junit-platform-engine:6.10.4'
+	acceptanceTestImplementation 'io.cucumber:cucumber-java:7.11.1'
+	acceptanceTestImplementation 'io.cucumber:cucumber-spring:7.11.1'
+	acceptanceTestImplementation 'io.cucumber:cucumber-junit-platform-engine:7.11.1'
+	acceptanceTestImplementation 'org.junit.platform:junit-platform-suite-api:1.9.2'
+
+	acceptanceTestImplementation('org.springframework.boot:spring-boot-starter-test') {
+		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+	}
 }
 
 task acceptanceTest(type: Test) {
@@ -61,18 +57,7 @@ task acceptanceTest(type: Test) {
 	useJUnitPlatform()
 }
 
-task documentationTest(type: Test) {
-	testClassesDirs = sourceSets.documentation.output.classesDirs
-	classpath = sourceSets.documentation.runtimeClasspath
-	useJUnitPlatform()
-}
 
 ext {
 	snippetsDir = file('build/generated-snippets')
-}
-
-asciidoctor {
-	inputs.dir snippetsDir
-	sourceDir 'src/documentation/adoc'
-	dependsOn documentationTest
 }
